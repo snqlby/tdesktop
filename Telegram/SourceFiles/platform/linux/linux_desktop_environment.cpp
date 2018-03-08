@@ -121,7 +121,7 @@ bool PreferAppIndicatorTrayIcon() {
 }
 
 bool TryUnityCounter() {
-	return IsUnity() || IsPantheon() || IsUbuntu();
+	return IsGnome() || IsUnity() || IsPantheon();
 }
 
 } // namespace DesktopEnvironment
