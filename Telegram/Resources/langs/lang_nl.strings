@@ -279,6 +279,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_settings_notifications_count" = "Teller weergeven";
 "lng_settings_sound_notify" = "Geluiden afspelen";
 "lng_settings_include_muted" = "Stille chats meetellen in ongelezen";
+"lng_settings_include_mentions" = "Include mentions in unread count";
 
 "lng_notification_preview" = "Je hebt een nieuw bericht";
 "lng_notification_reply" = "Antwoord";

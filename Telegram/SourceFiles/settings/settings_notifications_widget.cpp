@@ -55,6 +55,7 @@ void NotificationsWidget::createControls() {
 	}
 	createChildRow(_playSound, margin, lang(lng_settings_sound_notify), [this](bool) { onPlaySound(); }, Global::SoundNotify());
 	createChildRow(_includeMuted, margin, lang(lng_settings_include_muted), [this](bool) { onIncludeMuted(); }, Global::IncludeMuted());
+	createChildRow(_includeMentions, margin, lang(lng_settings_include_mentions), [this](bool) { onIncludeMentions(); }, Global::IncludeMentions());
 
 	if (cPlatform() != dbipMac) {
 		createNotificationsControls();
@@ -176,6 +177,12 @@ void NotificationsWidget::onIncludeMuted() {
 	Global::SetIncludeMuted(_includeMuted->checked());
 	Local::writeUserSettings();
 	Auth().notifications().settingsChanged().notify(ChangeType::IncludeMuted);
+}
+
+void NotificationsWidget::onIncludeMentions() {
+	Global::SetIncludeMentions(_includeMentions->checked());
+	Local::writeUserSettings();
+	Auth().notifications().settingsChanged().notify(ChangeType::IncludeMentions);
 }
 
 } // namespace Settings

@@ -45,6 +45,8 @@ System::System(AuthSession *session) : _authSession(session) {
 			updateAll();
 		} else if (type == ChangeType::IncludeMuted) {
 			Notify::unreadCounterUpdated();
+		} else if (type == ChangeType::IncludeMentions) {
+			Notify::unreadCounterUpdated();
 		}
 	});
 }

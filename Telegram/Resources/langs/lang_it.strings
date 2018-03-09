@@ -279,6 +279,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_settings_notifications_count" = "Conteggio notifiche";
 "lng_settings_sound_notify" = "Riproduci suono";
 "lng_settings_include_muted" = "Includi chat silenziate nel badge";
+"lng_settings_include_mentions" = "Include mentions in unread count";
 
 "lng_notification_preview" = "Hai un nuovo messaggio";
 "lng_notification_reply" = "Rispondi";

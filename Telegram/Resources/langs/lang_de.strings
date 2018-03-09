@@ -279,6 +279,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_settings_notifications_count" = "Anzahl der Benachrichtigungen";
 "lng_settings_sound_notify" = "Ton abspielen";
 "lng_settings_include_muted" = "Stummgeschaltete Chats mitzählen";
+"lng_settings_include_mentions" = "Include mentions in unread count";
 
 "lng_notification_preview" = "Du hast eine neue Nachricht";
 "lng_notification_reply" = "Antworten";

@@ -557,6 +557,7 @@ struct Data {
 	bool DesktopNotify = true;
 	bool RestoreSoundNotifyFromTray = false;
 	bool IncludeMuted = true;
+	bool IncludeMentions = true;
 	DBINotifyView NotifyView = dbinvShowPreview;
 	bool NativeNotifications = false;
 	int NotificationsCount = 3;
@@ -680,6 +681,7 @@ DefineVar(Global, bool, SoundNotify);
 DefineVar(Global, bool, DesktopNotify);
 DefineVar(Global, bool, RestoreSoundNotifyFromTray);
 DefineVar(Global, bool, IncludeMuted);
+DefineVar(Global, bool, IncludeMentions);
 DefineVar(Global, DBINotifyView, NotifyView);
 DefineVar(Global, bool, NativeNotifications);
 DefineVar(Global, int, NotificationsCount);

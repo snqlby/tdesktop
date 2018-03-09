@@ -279,6 +279,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_settings_notifications_count" = "알림 개수";
 "lng_settings_sound_notify" = "소리 재생";
 "lng_settings_include_muted" = "안 읽은 메시지에 음소거된 채팅방 포함";
+"lng_settings_include_mentions" = "Include mentions in unread count";
 
 "lng_notification_preview" = "새로운 메시지가 있습니다.";
 "lng_notification_reply" = "답장";

@@ -24,6 +24,7 @@ private slots:
 	void onNativeNotifications();
 	void onPlaySound();
 	void onIncludeMuted();
+	void onIncludeMentions();
 	void onAdvanced();
 
 private:
@@ -38,6 +39,7 @@ private:
 	Ui::Checkbox *_nativeNotifications = nullptr;
 	Ui::Checkbox *_playSound = nullptr;
 	Ui::Checkbox *_includeMuted = nullptr;
+	Ui::Checkbox *_includeMentions = nullptr;
 	Ui::SlideWrap<Ui::LinkButton> *_advanced = nullptr;
 
 };
