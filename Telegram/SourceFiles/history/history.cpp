@@ -35,6 +35,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/text_options.h"
 #include "core/crash_reports.h"
 
+#include <numeric>
+
 namespace {
 
 constexpr auto kStatusShowClientsideTyping = 6000;
@@ -94,6 +96,7 @@ not_null<History*> Histories::findOrInsert(PeerId peerId) {
 	const auto [i, ok] = _map.emplace(
 		peerId,
 		std::make_unique<History>(peerId));
+	_unreadMentions.emplace(peerId, 0);
 	return i->second.get();
 }
 
@@ -101,6 +104,7 @@ void Histories::clear() {
 	App::historyClearMsgs();
 
 	_map.clear();
+	_unreadMentions.clear();
 
 	_unreadFull = _unreadMuted = 0;
 	Notify::unreadCounterUpdated();
@@ -142,6 +146,7 @@ void Histories::remove(const PeerId &peer) {
 	if (i != _map.cend()) {
 		typing.remove(i->second.get());
 		_map.erase(i);
+		_unreadMentions.erase(int32(uint32(peer & 0xFFFFFFFFULL)));
 	}
 }
 
@@ -159,11 +164,17 @@ HistoryItem *Histories::addNewMessage(
 }
 
 int Histories::unreadBadge() const {
-	return _unreadFull - (Global::IncludeMuted() ? 0 : _unreadMuted);
+	return _unreadFull - (Global::IncludeMuted() ? 0 : 
+		(Global::IncludeMentions() ? _unreadMuted - unreadMentionsCount(): _unreadMuted));
 }
 
 int Histories::unreadMutedCount() const {
 	return _unreadMuted;
+}
+
+int Histories::unreadMentionsCount() const {
+	return std::accumulate(_unreadMentions.cbegin(), _unreadMentions.cend(), 0, 
+		[](int t, auto &value) { return t + value.second; });
 }
 
 void Histories::unreadIncrement(int count, bool muted) {
@@ -182,6 +193,11 @@ void Histories::unreadMuteChanged(int count, bool muted) {
 	} else {
 		_unreadMuted -= count;
 	}
+	Notify::unreadCounterUpdated();
+}
+
+void Histories::unreadMentionsUpdate(int id, int count) {
+	_unreadMentions[id] = count;
 	Notify::unreadCounterUpdated();
 }
 
@@ -825,6 +841,8 @@ void History::setUnreadMentionsCount(int count) {
 		count = _unreadMentions.size();
 	}
 	_unreadMentionsCount = count;
+
+	App::histories().unreadMentionsUpdate(peer->bareId(), count);
 }
 
 bool History::addToUnreadMentions(
@@ -833,19 +851,21 @@ bool History::addToUnreadMentions(
 	if (peer->isChannel() && !peer->isMegagroup()) {
 		return false;
 	}
+
 	auto allLoaded = _unreadMentionsCount
 		? (_unreadMentions.size() >= *_unreadMentionsCount)
 		: false;
-	if (allLoaded) {
-		if (type == UnreadMentionType::New) {
-			++*_unreadMentionsCount;
-			_unreadMentions.insert(msgId);
-			return true;
-		}
-	} else if (!_unreadMentions.empty() && type != UnreadMentionType::New) {
+
+	if (type == UnreadMentionType::New) {
 		_unreadMentions.insert(msgId);
+		App::histories().unreadMentionsUpdate(peer->bareId(), ++*_unreadMentionsCount);
+		return true;
+	} else if (!_unreadMentions.empty()) {
+		_unreadMentions.insert(msgId);
+		App::histories().unreadMentionsUpdate(peer->bareId(), 1);
 		return true;
 	}
+
 	return false;
 }
 
@@ -853,7 +873,7 @@ void History::eraseFromUnreadMentions(MsgId msgId) {
 	_unreadMentions.remove(msgId);
 	if (_unreadMentionsCount) {
 		if (*_unreadMentionsCount > 0) {
-			--*_unreadMentionsCount;
+			App::histories().unreadMentionsUpdate(peer->bareId(), --*_unreadMentionsCount);
 		}
 	}
 	Notify::peerUpdatedDelayed(peer, Notify::PeerUpdate::Flag::UnreadMentionsChanged);

@@ -73,9 +73,11 @@ public:
 
 	int unreadBadge() const;
 	int unreadMutedCount() const;
+	int unreadMentionsCount() const;
 	bool unreadOnlyMuted() const;
 	void unreadIncrement(int count, bool muted);
 	void unreadMuteChanged(int count, bool muted);
+	void unreadMentionsUpdate(int id, int count);
 
 	struct SendActionAnimationUpdate {
 		History *history;
@@ -96,6 +98,8 @@ private:
 	int _unreadFull = 0;
 	int _unreadMuted = 0;
 	base::Observable<SendActionAnimationUpdate> _sendActionAnimationUpdated;
+
+	std::unordered_map<int, int> _unreadMentions;
 
 	base::Timer _selfDestructTimer;
 	std::vector<FullMsgId> _selfDestructItems;
